@@ -8,16 +8,16 @@ Provide a .gpw file and run the program.
 $ python band_structure.py file.gpw
 
 Then, the program will ask you for the desired method of interpolation: LCAO, PAW, PW and Finite Difference.
-#################################################################
-#################### Band Structure Plotter #####################
-#################################################################
+
+
+Band Structure Plotter
 
 >>>>     Which method should I use for calculating your band structure?
 
-        a. Finite difference(Real Space)
-        b. Plane Wave Expansion
-        c. Linear Combination of Atomic Orbitals (LCAO)
-        d. Projector Augmented Wave
+a. Finite difference(Real Space)
+b. Plane Wave Expansion
+c. Linear Combination of Atomic Orbitals (LCAO)
+d. Projector Augmented Wave
 
 >>> a
 
