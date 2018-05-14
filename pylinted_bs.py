@@ -7,7 +7,6 @@ from matplotlib import pyplot as plt
 from gpaw import GPAW
 import sys
 
-
 calc = GPAW(str(sys.argv[1]))
 
 class BandElementInterface(object):
@@ -85,7 +84,7 @@ class BandStructureInterface(object):
             for k in range(self.nkpts - 1):
                 for n_prim in range(self.nbands):
                     print("Currently overlapping n: " + str(n) + ". k: " +str(k) +". n': " +
-                          str(n_prim) + "\t" +str(n/self.nbands) + " percent completed.")
+                          str(n_prim) + "\t" +str(n/float(self.nbands)) + " percent completed.")
                     self.bs_matrix[n][k].overlaps[n_prim] = abs(
                         (self.calc.get_pseudo_wave_function(n, k).conj() *
                          self.calc.get_pseudo_wave_function(n_prim, k+1)).sum() /
