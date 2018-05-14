@@ -85,7 +85,7 @@ class BandStructureInterface(object):
             for k in range(self.nkpts - 1):
                 for n_prim in range(self.nbands):
                     print("Currently overlapping n: " + str(n) + ". k: " +str(k) +". n': " +
-                          str(n_prim))
+                          str(n_prim) + "\t" +str(n/self.nbands) + " percent completed.")
                     self.bs_matrix[n][k].overlaps[n_prim] = abs(
                         (self.calc.get_pseudo_wave_function(n, k).conj() *
                          self.calc.get_pseudo_wave_function(n_prim, k+1)).sum() /
@@ -131,7 +131,7 @@ class BandStructureInterface(object):
                             best_overlap_index += 1
                             if k == self.nkpts - 2 and n == self.nbands - 1:
                                 done = True
-                            print("Ended loop")
+                                print("Ended loop")
                         else:
                             print("Unmatching n: " + str(n) + ". k: " +str(k) +"with . n: ")
                             next_match.prev = None
@@ -139,7 +139,7 @@ class BandStructureInterface(object):
                             next_match.prev = current_element.next
                             if k == self.nkpts - 2 and n == self.nbands - 1:
                                 done = True
-                            print("Ended loop")
+                                print("Ended loop")
 
     def get_overlap(self, kpt1, kpt2):
         """Calculate the overlap between wavefunctions at
@@ -157,43 +157,29 @@ class BandStructureInterface(object):
         fig = plt.figure()
         plt.title("Band Structure")
         for i in range(self.nbands-1):
-            #print(self.bands[i][0][i])
-            print(i)
-            print(self.bands)
-            
             plt.plot(self.bands[i][0], self.bands[i][1])
         plt.xlabel('k-points')
         plt.ylabel('Eigenenergies [eV]')
         plt.grid()
         plt.legend()
         plt.show()
- #   def get_pw_overlap(calc, k1=0, k2=1):
- #       """Calculate PW overlaps for kpts k1 and k2"""
- #       calc.set_positions(calc.get_atoms())
- #       kpt1 = calc.wfs.kpt_u[k1]
- #       kpt2 = calc.wfs.kpt_u[k2]
- #       nbands = calc.get_number_of_bands()
- #       dtype = calc.wfs.dtype
- #       pw_overlap = zeros((nbands, nbands), dtype=dtype)
- #       pw_overlap = abs(dot(kpt1.psit_nG[:],
- #                            kpt2.psit_nG[:].transpose().conj()))
- #       # Normalization
- #       norm = abs(dot(kpt1.psit_nG[:],
- #                      kpt1.psit_nG[:].transpose().conj())).diagonal()
- #       pw_overlap /= norm
- #       return pw_overlap
+
 class MainMenu():
-    def show_options(self):
+    def display_menu(self):
+        print("\n\n\n\n\n")
+        print("\n\n\n\n\n")
+        print("\n\n\n\n\n")
         print("##################\
-            ###############################################")
+###############################################")
         print("##################\
-            ## Band Structure Plotter #####################")
+## Band Structure Plotter #####################")
         print("##################\
-            ###############################################")
+###############################################")
+        print("\n\n\n\n\n")
         print("\n\n\n\n\n")
         chosen_option = False
         while not chosen_option:
-            print("\n>>>>\t Which method should I use for calculating your band structure?")
+            print("\n>>>>\t Which method should I use for calculating your band structure?\n\n")
             options = ["\ta. Finite difference(Real Space)\n",
                        "\tb. Plane Wave Expansion\n",
                        "\tc. Linear Combination of Atomic Orbitals (LCAO)\n",
@@ -201,14 +187,62 @@ class MainMenu():
             option = raw_input(''.join([options[i] for i in range(len(options))])).lower()
             if option == "a":
                 band_struc = BandStructureInterface(calc)
+                #band_struc.print_bands()
+                chosen_option = True
+                print("Finished calculation")
+            elif option == "b":
+                print("\n\n\n\n\n")
+                print("##################\
+###############################################")
+                print("No.")
+                print("##################\
+###############################################")
+                print("\n\n\n\n\n")
+            elif option == "c":
+                print("\n\n\n\n\n")
+                print("##################\
+###############################################")
+                print("Chao.")
+                print("##################\
+###############################################")
+                print("\n\n\n\n\n")
+            else:
+                print("\n\n\n\n\n")
+                print("##################\
+###############################################")
+                print("Please chose a valid option")
+                print("##################\
+###############################################")
+                print("\n\n\n\n\n")
+        while chosen_option:
+            print("\n>>>>\t What do you want to do now?\n\n")
+            options = ["\ta. Display the plot of your band structure\n",
+                       "\tb. Export your band structure data into a .txt file\n",
+                       "\tc. Redo the calculations\n",
+                       "\td. Close the program\n\n>>> "]
+            option = raw_input(''.join([options[i] for i in range(len(options))])).lower()
+            if option == "a":
                 band_struc.print_bands()
                 chosen_option = True
                 print("Finished calculation")
             elif option == "b":
-                print("No.")
+                print("Not yet implemented")
             elif option == "c":
-                print("Chao.")
+                MainMenu()
+            elif option == "d":
+                exit()
             else:
                 print("Please chose a valid option")
+            
+    def set_options(self, op_list):
+        options = ["\ta. Finite difference(Real Space)\n",
+                       "\tb. Plane Wave Expansion\n",
+                       "\tc. Linear Combination of Atomic Orbitals (LCAO)\n",
+                       "\td. Projector Augmented Wave\n\n>>> "]
+        for i in range(len(op_list)):
+            options.append("\t"+str(op_list[i])+"\n")
+        print("\n>>> ")
+        option = raw_input(''.join([options[i] for i in range(len(options))])).lower()
+        
 MENU = MainMenu()
-MENU.show_options()
+MENU.display_menu()
