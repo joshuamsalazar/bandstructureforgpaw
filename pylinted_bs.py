@@ -83,8 +83,9 @@ class BandStructureInterface(object):
         for n in range(self.nbands):
             for k in range(self.nkpts - 1):
                 for n_prim in range(self.nbands):
+                    percentage = n/float(self.nbands)*100 + 1/float(self.nbands)/self.nkpts*k*100  
                     print("Currently overlapping n: " + str(n) + ". k: " +str(k) +". n': " +
-                          str(n_prim) + "\t" +str(n/float(self.nbands)) + " percent completed.")
+                          str(n_prim) + "\t" +str(round(percentage, 3)) + " percent completed.")
                     self.bs_matrix[n][k].overlaps[n_prim] = abs(
                         (self.calc.get_pseudo_wave_function(n, k).conj() *
                          self.calc.get_pseudo_wave_function(n_prim, k+1)).sum() /
@@ -163,17 +164,19 @@ class BandStructureInterface(object):
         plt.legend()
         plt.show()
 
+def display_notif(text):
+    print("\n"*24)
+    print("#"*60)
+    print("\t\t" + str(text))
+    print("#"*60)
+    print("\n"*6)
+
 class MainMenu():
     def display_menu(self):
         print("\n\n\n\n\n")
         print("\n\n\n\n\n")
         print("\n\n\n\n\n")
-        print("##################\
-###############################################")
-        print("##################\
-## Band Structure Plotter #####################")
-        print("##################\
-###############################################")
+        display_notif("Band Structure interpolator v0.2")
         print("\n\n\n\n\n")
         print("\n\n\n\n\n")
         chosen_option = False
@@ -182,58 +185,46 @@ class MainMenu():
             options = ["\ta. Finite difference(Real Space)\n",
                        "\tb. Plane Wave Expansion\n",
                        "\tc. Linear Combination of Atomic Orbitals (LCAO)\n",
-                       "\td. Projector Augmented Wave\n\n>>> "]
+                       "\td. Projector Augmented Wave\n",
+                       "\te. Close the program\n\nEnter your option >>> "]
             option = raw_input(''.join([options[i] for i in range(len(options))])).lower()
             if option == "a":
                 band_struc = BandStructureInterface(calc)
                 #band_struc.print_bands()
                 chosen_option = True
-                print("Finished calculation")
+                display_notif("Finished Calculation")
             elif option == "b":
-                print("\n\n\n\n\n")
-                print("##################\
-###############################################")
-                print("No.")
-                print("##################\
-###############################################")
-                print("\n\n\n\n\n")
+                display_notif("Pending code")
             elif option == "c":
-                print("\n\n\n\n\n")
-                print("##################\
-###############################################")
-                print("Chao.")
-                print("##################\
-###############################################")
-                print("\n\n\n\n\n")
+                display_notif("Pending code")
+            elif option == "d":
+                display_notif("Pending code")
+            elif option == "e":
+                exit()
             else:
-                print("\n\n\n\n\n")
-                print("##################\
-###############################################")
-                print("Please chose a valid option")
-                print("##################\
-###############################################")
-                print("\n\n\n\n\n")
+                display_notif("Please choose a valid option")
         while chosen_option:
             print("\n>>>>\t What do you want to do now?\n\n")
             options = ["\ta. Display the plot of your band structure\n",
                        "\tb. Export your band structure data into a .txt file\n",
                        "\tc. Redo the calculations\n",
-                       "\td. Close the program\n\n>>> "]
+                       "\td. Close the program\n\nEnter your option >>> "]
             option = raw_input(''.join([options[i] for i in range(len(options))])).lower()
             if option == "a":
                 band_struc.print_bands()
                 chosen_option = True
-                print("Finished calculation")
+                display_notif("Finished Calculation")
             elif option == "b":
-                print("Not yet implemented")
-            elif option == "c":
-                MainMenu()
+                display_notif("Not yet implemented")
+            elif option == "c": 
+                chosen_option = False
+                MainMenu().display_menu()
             elif option == "d":
                 exit()
             else:
                 print("Please chose a valid option")
             
-    def set_options(self, op_list):
+    def set_options(self, op_list): #Pending method or displaying menus of varialbe options
         options = ["\ta. Finite difference(Real Space)\n",
                        "\tb. Plane Wave Expansion\n",
                        "\tc. Linear Combination of Atomic Orbitals (LCAO)\n",
@@ -242,6 +233,8 @@ class MainMenu():
             options.append("\t"+str(op_list[i])+"\n")
         print("\n>>> ")
         option = raw_input(''.join([options[i] for i in range(len(options))])).lower()
+        
+
         
 MENU = MainMenu()
 MENU.display_menu()
