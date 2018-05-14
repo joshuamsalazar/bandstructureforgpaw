@@ -88,27 +88,23 @@ class BandStructureInterface(object):
 
     def initialize_overlaps(self):
         """Initialize the overlap list for each band_nk """
-        for n in range(self.nbands):
-            for k in range(self.nkpts - 1):
+        for k in range(self.nkpts-1):
+            overlaps = self.get_pw_overlap(k,k+1)
+            for n in range(self.nbands):
                 for n_prim in range(self.nbands):
-                    percentage = n/float(self.nbands)*100 + 1/float(self.nbands)/self.nkpts*k*100  
-                    print("Currently overlapping n: " + str(n) + ". k: " +str(k) +". n': " +
-                          str(n_prim) + "\t" +str(round(percentage, 3)) + " percent completed.")
-                    self.bs_matrix[n][k].overlaps[n_prim] = abs(
-                        (self.calc.get_pseudo_wave_function(n, k).conj() *
-                         self.calc.get_pseudo_wave_function(n_prim, k+1)).sum() /
-                        (self.calc.get_pseudo_wave_function(n, k).conj() *
-                         self.calc.get_pseudo_wave_function(n, k)).sum())
-                self.bs_matrix[n][k].overlaps = sorted(
-                    self.bs_matrix[n][k].overlaps.items(), key=lambda x: -x[1])
+                    print("Currently overlapping n: " + str(n) + ". k: " +str(k))
+                    self.bs_matrix[n][k].overlaps[n_prim] = overlaps[n][n_prim]
+
+                self.bs_matrix[n][k].overlaps = sorted(self.bs_matrix[n][k].overlaps.items(), key=lambda x: -x[1])
                         #Cloning the dictionary into a overlap-ordered list [(nband, overlap),...}
+        print "PW Overlap substituted by FD"+self.counter"times."
 
     def match_bands(self):
         """Trace bands through the k-space
         calling the match method for each BandElement"""
         done = False
         while not done:
-            for k in range(self.nkpts - 1):
+            for k in range(self.nkpts - 2):
                 for n in range(self.nbands):
                     current_element = self.bs_matrix[n][k]
                         #Variable containing the current band element in the FOR loop process 
@@ -137,7 +133,7 @@ class BandStructureInterface(object):
                                     self.bs_matrix[n_next][k].best_overlap][0]:
                             print("Conflict n: " + str(n) + ". k: " +str(k))
                             best_overlap_index += 1
-                            if k == self.nkpts - 2 and n == self.nbands - 1:
+                            if k == self.nkpts - 3 and n == self.nbands - 1:
                                 done = True
                                 print("Ended loop")
                         else:
@@ -145,16 +141,45 @@ class BandStructureInterface(object):
                             next_match.prev = None
                             current_element.next = next_match
                             next_match.prev = current_element.next
-                            if k == self.nkpts - 2 and n == self.nbands - 1:
+                            if k == self.nkpts - 3 and n == self.nbands - 1:
                                 done = True
                                 print("Ended loop")
+	
+    def get_pw_overlap(self, k1, k2):
+        """Calculate PW overlaps for kpts k1 and k2"""
+        calc.set_positions(calc.get_atoms())
+        kpt1 = calc.wfs.kpt_u[k1]
+        kpt2 = calc.wfs.kpt_u[k2]
+        nbands = calc.get_number_of_bands()
+        dtype = calc.wfs.dtype
 
-    def get_overlap(self, kpt1, kpt2):
-        """Calculate the overlap between wavefunctions at
-        kpt1, and kpt2 <psi_n,kpt1|psi_n',kpt2>
-        returns a nbands by nbands array"""
-        raise NotImplementedError
+        pw_overlap = zeros((nbands, nbands), dtype=dtype)
 
+        w1 = kpt1.psit_nG[:]
+        w2 = kpt2.psit_nG[:].transpose().conj()
+
+        if w1.shape[1] != w2.shape[0]:
+                dim_min = min(w1.shape[1],w2.shape[0])
+
+                if w1.shape[1] < w2.shape[0]:
+                        w2 = resize(w2,(dim_min,w2.shape[1]))
+
+                if w1.shape[1] > w2.shape[0]:
+                        w1 = resize(w1,(w1.shape[0],dim_min))
+
+        pw_overlap = abs(dot(w1,w2))
+
+        # Normalization
+        N = abs(dot(w1,w1.conjugate().transpose())).diagonal()
+        pw_overlap /= N
+	
+        for i in range(self.nbands):
+                if amax(pw_overlap[i])<0.6:
+                        self.counter += 1
+                        return self.get_overlap(k1,k2)
+
+        return pw_overlap
+	
     def get_bands(self):
         """Print all bands to filename by calling the print function
         each BandElement at the first k-point"""
