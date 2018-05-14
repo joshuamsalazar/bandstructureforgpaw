@@ -16,7 +16,7 @@ Then, the program will ask you for the desired method of interpolation: LCAO, PA
 
 >>> Which method should I use for calculating your band structure?
 
-      a. Finite difference(Real Space)
+      a. Finite Difference (Real Space)
       b. Plane Wave Expansion
       c. Linear Combination of Atomic Orbitals (LCAO)
       d. Projector Augmented Wave
@@ -37,6 +37,17 @@ Then, it lets you display the plot, save the data to a file or run again the cal
 >>> 
 
 ```
+If you want to download a file from Github using your command line you may:
+
+* Open the file in Github.
+
+* Copy the specific file's raw link from GitHub. On the top right corner you can see the option to open the file in raw mode.
+
+* Open it in raw mode and copy the URL.
+
+* Now use curl command in command line to download the file:
+
+      curl -o filename raw-link-to-file
 
 
 
