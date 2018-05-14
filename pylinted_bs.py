@@ -50,6 +50,14 @@ class BandElementInterface(object):
             band[1].append(self.evalue)
             self = self.next
         return band
+    
+    def printf_band(self, filehandle):
+	        """Print the band to the passed file handle"""
+    	    print >> filehandle, self.kpt, self.evalue
+        	if self.next is not None:
+		        self.next.print_band(filehandle)
+	        else:
+		        print >> filehandle, " "
 
 class BandStructureInterface(object):
     """Interface for a band structure class"""
@@ -163,6 +171,12 @@ class BandStructureInterface(object):
         plt.grid()
         plt.legend()
         plt.show()
+        
+    def printf_bands(self, filehandle):
+	    for i in range(self.nbands):
+		    print >> filehandle, "BAND: "+i
+		    print >> filehandle, "KPT\tEnergy"
+		    self.bs_matrix[i][0].print_band(filehandle)
 
 def display_notif(text):
     print("\n"*24)
@@ -215,7 +229,7 @@ class MainMenu():
                 chosen_option = True
                 display_notif("Finished Calculation")
             elif option == "b":
-                display_notif("Not yet implemented")
+                band_struct.printf_bands("bands.txt")
             elif option == "c": 
                 chosen_option = False
                 MainMenu().display_menu()
