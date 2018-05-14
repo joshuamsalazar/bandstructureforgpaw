@@ -43,7 +43,7 @@ If you want to download a file from Github using your command line you may:
 
 * Copy the specific file's raw link from GitHub. On the top right corner you can see the option to open the file in raw mode.
 
-* Open it in raw mode and copy the URL
+* Open it in raw mode and copy the URL.
 
 * Now use curl command in command line to download the file:
 
