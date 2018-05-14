@@ -12,14 +12,17 @@ Then, the program will ask you for the desired method of interpolation: LCAO, PA
 
 Band Structure Plotter
 
->>>>     Which method should I use for calculating your band structure?
+Which method should I use for calculating your band structure?
 
 a. Finite difference(Real Space)
+
 b. Plane Wave Expansion
+
 c. Linear Combination of Atomic Orbitals (LCAO)
+
 d. Projector Augmented Wave
 
->>> a
+Then, it calculates it for you and displays the plot on screen.
 
 
 
