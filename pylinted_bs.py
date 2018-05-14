@@ -5,8 +5,10 @@ Computational Physics I Final Project
 
 from matplotlib import pyplot as plt
 from gpaw import GPAW
+import sys
 
-calc = GPAW('graphene_ground_state_pw_PBEsol_G-K-M.gpw')
+
+calc = GPAW(str(sys.argv[1]))
 
 class BandElementInterface(object):
     """Interface for an element of a band"""
@@ -67,6 +69,7 @@ class BandStructureInterface(object):
         self.initialize_band_structure()
         self.initialize_overlaps()
         self.match_bands()
+        self.get_bands()
 
     def initialize_band_structure(self):
         """Initialize the band structure matrix (n,kpt) with BandElements"""
@@ -156,6 +159,8 @@ class BandStructureInterface(object):
         for i in range(self.nbands-1):
             #print(self.bands[i][0][i])
             print(i)
+            print(self.bands)
+            
             plt.plot(self.bands[i][0], self.bands[i][1])
         plt.xlabel('k-points')
         plt.ylabel('Eigenenergies [eV]')
@@ -179,9 +184,12 @@ class BandStructureInterface(object):
  #       return pw_overlap
 class MainMenu():
     def show_options(self):
-        print("#################################################################")
-        print("#################### Band Structure Plotter #####################")
-        print("#################################################################")
+        print("##################\
+            ###############################################")
+        print("##################\
+            ## Band Structure Plotter #####################")
+        print("##################\
+            ###############################################")
         print("\n\n\n\n\n")
         chosen_option = False
         while not chosen_option:
@@ -189,12 +197,13 @@ class MainMenu():
             options = ["\ta. Finite difference(Real Space)\n",
                        "\tb. Plane Wave Expansion\n",
                        "\tc. Linear Combination of Atomic Orbitals (LCAO)\n",
-                       "\td. Projector Augmented Wave\n\n >>>"]
+                       "\td. Projector Augmented Wave\n\n>>> "]
             option = raw_input(''.join([options[i] for i in range(len(options))])).lower()
             if option == "a":
                 band_struc = BandStructureInterface(calc)
                 band_struc.print_bands()
                 chosen_option = True
+                print("Finished calculation")
             elif option == "b":
                 print("No.")
             elif option == "c":
