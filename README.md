@@ -35,7 +35,6 @@ Then, it lets you display the plot, save the data to a file or run again the cal
         d. Close the program
 
 >>> 
-
 ```
 If you want to download a specific file from Github using your command line you may:
 
