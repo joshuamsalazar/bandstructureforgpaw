@@ -7,7 +7,10 @@ Provide a .gpw file and run the program.
 
 $ python band_structure.py file.gpw
 
-Then, the program will ask you for the desired method of interpolation: LCAO, PAW, PW and Finite Difference.
+Then, the program will ask you for the desired method of interpolation: LCAO, PAW, PW and Finite Difference. 
+
+### BE CAREFUL: 
+You should import a LCAO file if you want to execute LCAO interpolation method, PW file for PW interpolation, etc.  
 
 ```
 #########################################################
